@@ -1,121 +1,72 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
-import Spline from '@splinetool/react-spline';
+import { motion, useReducedMotion } from 'framer-motion';
 
-const splitToChars = (text) => text.split('').map((c, i) => ({ c, i }));
+export default function Hero() {
+  const prefersReducedMotion = useReducedMotion();
 
-export default function Hero({ onCTAClick }) {
-  const controls = useAnimation();
-  const lineControls = useAnimation();
-  const title = useMemo(() => splitToChars("Hi, I’m Anggara — Mobile Developer"), []);
-  const parallaxRef = useRef(null);
-
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rotateY = useTransform(mx, [-50, 50], [-3, 3]);
-  const rotateX = useTransform(my, [-50, 50], [3, -3]);
-
-  useEffect(() => {
-    controls.start((i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: 0.6 + i * 0.02, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }
-    }));
-
-    lineControls.start({ width: '100%', transition: { delay: 1.6, duration: 1.2, ease: [0.25, 0.1, 0.25, 1] } });
-  }, [controls, lineControls]);
-
-  const handleMouseMove = (e) => {
-    const rect = parallaxRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = e.clientX - (rect.left + rect.width / 2);
-    const y = e.clientY - (rect.top + rect.height / 2);
-    const damp = 0.15;
-    mx.set((x * damp) / 10);
-    my.set((y * damp) / 10);
+  const fadeUp = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 12 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
   };
 
   return (
-    <section id="home" className="relative h-screen w-full overflow-hidden bg-black text-white">
-      {/* 3D Background */}
-      <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/EF7JOSsHLk16Tlw9/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-      </div>
-      {/* Soft gradient veil for cinematic depth */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/90" />
+    <section id="home" className="relative min-h-[90vh] flex items-center justify-center bg-black text-white overflow-hidden">
+      {/* Subtle background vignette and grain */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-black to-black" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-soft-light"
+           style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px)', backgroundSize: '6px 6px' }}
+           aria-hidden="true" />
 
-      {/* Foreground Content */}
-      <motion.div
-        ref={parallaxRef}
-        onMouseMove={handleMouseMove}
-        style={{ rotateY, rotateX }}
-        className="relative z-10 flex h-full w-full items-center justify-center px-6"
-      >
-        <div className="max-w-5xl w-full">
-          <h1 className="mb-4 select-none text-center font-extralight tracking-tight text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            {title.map(({ c, i }) => (
-              <motion.span
-                key={i}
-                custom={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={controls}
-                className="inline-block"
-              >
-                {c === ' ' ? '\u00A0' : c}
-              </motion.span>
-            ))}
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mx-auto mb-8 max-w-2xl text-center text-gray-200/80 text-sm sm:text-base md:text-lg"
-          >
-            Building seamless experiences in Flutter & Kotlin
-          </motion.p>
-
-          {/* Glowing separator line */}
-          <div className="mx-auto mb-10 h-px w-full max-w-xl overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={lineControls}
-              className="h-px bg-gradient-to-r from-white/0 via-white/70 to-white/0 shadow-[0_0_20px_2px_rgba(255,255,255,0.4)]"
-            />
-          </div>
-
-          <div className="flex items-center justify-center gap-4">
-            <motion.button
-              onClick={onCTAClick}
-              whileHover={{ x: 6, boxShadow: '0 0 30px rgba(255,255,255,0.25)' }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm uppercase tracking-widest text-white/90 backdrop-blur-md transition-colors hover:bg-white/10"
-            >
-              View My Work
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.0, duration: 0.8, ease: 'easeInOut' }}
-          className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2"
+      <div className="relative z-10 w-full max-w-5xl px-6 md:px-8">
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="tracking-widest text-xs md:text-sm text-neutral-400 uppercase mb-4"
         >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
-            className="h-10 w-6 rounded-full border border-white/30"
+          Anggara — Mobile Developer
+        </motion.p>
+
+        <motion.h1
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          transition={{ delay: 0.05 }}
+          className="text-4xl sm:text-5xl md:text-7xl font-semibold leading-tight"
+        >
+          Building elegant, performant mobile experiences.
+        </motion.h1>
+
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          transition={{ delay: 0.1 }}
+          className="mt-5 max-w-2xl text-neutral-300 text-sm sm:text-base leading-relaxed"
+        >
+          I craft robust iOS/Android apps with a focus on smooth interactions, clean architecture, and long-term maintainability.
+        </motion.p>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          transition={{ delay: 0.15 }}
+          className="mt-8 flex flex-wrap gap-3"
+        >
+          <a
+            href="#projects"
+            className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <motion.div
-              animate={{ y: [6, 22, 6] }}
-              transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
-              className="mx-auto mt-1 h-2 w-1 rounded-full bg-white"
-            />
-          </motion.div>
+            View work
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2 text-sm text-white hover:border-white/40 transition-colors"
+          >
+            Get in touch
+          </a>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

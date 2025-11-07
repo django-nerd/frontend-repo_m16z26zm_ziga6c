@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect } from 'react';
 import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
@@ -7,37 +6,44 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 
 export default function App() {
-  const projectsRef = useRef(null);
-
-  const scrollToProjects = () => {
-    const el = document.querySelector('#projects');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    // Smooth scroll for internal anchors – lightweight, no extra deps
+    const handler = (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white antialiased selection:bg-white/10 selection:text-white">
-      {/* Page transition overlay */}
-      <AnimatePresence>
-        <motion.div
-          key="page-transition"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          exit={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: [0.4, 0.0, 0.2, 1] }}
-          className="pointer-events-none fixed inset-0 z-50 bg-black"
-        />
-      </AnimatePresence>
+    <div className="min-h-screen bg-black text-white antialiased selection:bg-white selection:text-black">
+      {/* Light, elegant, and performant layout */}
+      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/5">
+        <div className="max-w-5xl mx-auto px-6 md:px-8 h-14 flex items-center justify-between">
+          <a href="#home" className="font-medium tracking-wide">Anggara</a>
+          <nav className="hidden sm:flex gap-5 text-sm text-neutral-300">
+            <a href="#about" className="hover:text-white">About</a>
+            <a href="#skills" className="hover:text-white">Skills</a>
+            <a href="#projects" className="hover:text-white">Projects</a>
+            <a href="#contact" className="hover:text-white">Contact</a>
+          </nav>
+        </div>
+      </header>
 
-      {/* Subtle moving vignette for depth */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(80%_60%_at_50%_50%,transparent,black)] opacity-60" />
-
-      <Hero onCTAClick={scrollToProjects} />
-      <About />
-      <Skills />
-      <div ref={projectsRef}>
+      <main>
+        <Hero />
+        <About />
+        <Skills />
         <Projects />
-      </div>
-      <Contact />
+        <Contact />
+      </main>
     </div>
   );
 }
