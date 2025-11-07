@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
   const prefersReducedMotion = useReducedMotion();
@@ -10,18 +11,46 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-[90vh] flex items-center justify-center bg-black text-white overflow-hidden">
-      {/* Subtle background vignette and grain */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-black to-black" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-soft-light"
-           style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px)', backgroundSize: '6px 6px' }}
-           aria-hidden="true" />
+      {/* Spline animation background (vector, elegant) */}
+      {!prefersReducedMotion ? (
+        <div className="absolute inset-0" aria-hidden="true">
+          <Spline
+            scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
+      ) : (
+        // Static fallback for reduced motion users
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(60% 60% at 50% 50%, rgba(140, 120, 255, 0.35) 0%, rgba(255, 120, 80, 0.25) 35%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.9) 100%)',
+            filter: 'saturate(120%)',
+          }}
+        />
+      )}
 
+      {/* Subtle overlays with no interaction blocking */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-soft-light"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px), radial-gradient(circle at 75% 75%, #fff 1px, transparent 1px)',
+          backgroundSize: '6px 6px, 6px 6px',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Foreground content */}
       <div className="relative z-10 w-full max-w-5xl px-6 md:px-8">
         <motion.p
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="tracking-widest text-xs md:text-sm text-neutral-400 uppercase mb-4"
+          className="tracking-widest text-xs md:text-sm text-neutral-300/80 uppercase mb-4"
         >
           Anggara — Mobile Developer
         </motion.p>
@@ -31,7 +60,7 @@ export default function Hero() {
           initial="hidden"
           animate="show"
           transition={{ delay: 0.05 }}
-          className="text-4xl sm:text-5xl md:text-7xl font-semibold leading-tight"
+          className="text-4xl sm:text-5xl md:text-7xl font-semibold leading-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.2)]"
         >
           Building elegant, performant mobile experiences.
         </motion.h1>
@@ -41,7 +70,7 @@ export default function Hero() {
           initial="hidden"
           animate="show"
           transition={{ delay: 0.1 }}
-          className="mt-5 max-w-2xl text-neutral-300 text-sm sm:text-base leading-relaxed"
+          className="mt-5 max-w-2xl text-neutral-200/90 text-sm sm:text-base leading-relaxed"
         >
           I craft robust iOS/Android apps with a focus on smooth interactions, clean architecture, and long-term maintainability.
         </motion.p>
