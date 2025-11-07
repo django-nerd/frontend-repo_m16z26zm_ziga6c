@@ -1,60 +1,68 @@
+import React from 'react';
 import { motion } from 'framer-motion';
+import { Briefcase } from 'lucide-react';
 
-const item = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
-};
+const experiences = [
+  {
+    role: 'Senior Mobile Developer',
+    company: 'NovaTech Labs',
+    period: '2022 — Present',
+    points: [
+      'Led development of a React Native super app with 500k+ MAU',
+      'Architected modular feature packs with over-the-air updates',
+      'Improved startup time by 38% via bundle splitting and lazy init',
+    ],
+  },
+  {
+    role: 'Mobile Engineer',
+    company: 'Orbit Studio',
+    period: '2020 — 2022',
+    points: [
+      'Shipped Kotlin Multiplatform modules shared across 3 apps',
+      'Implemented offline-first sync with conflict resolution',
+      'Built CI pipelines for E2E tests on device farms',
+    ],
+  },
+];
 
 export default function Experience() {
-  const jobs = [
-    {
-      company: 'TechNova Mobile',
-      role: 'Senior Mobile Engineer',
-      period: '2022 — Present',
-      details:
-        'Led development of cross-platform features with Kotlin Multiplatform and Swift. Scaled CI/CD, improved startup by 35%.'
-    },
-    {
-      company: 'AlphaApps',
-      role: 'Mobile Developer',
-      period: '2020 — 2022',
-      details:
-        'Shipped 6+ production apps, implemented offline-first data layer, and refined motion design for engagement.'
-    }
-  ];
-
   return (
-    <section id="experience" className="relative py-20 md:py-28 bg-black text-white">
-      <div className="max-w-5xl mx-auto px-6 md:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="text-2xl md:text-3xl font-semibold mb-8"
-        >
-          Experience
-        </motion.h2>
+    <section id="experience" className="relative bg-black py-20 text-white">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-10 flex items-center gap-3">
+          <div className="rounded-lg bg-white/10 p-2 backdrop-blur">
+            <Briefcase className="h-5 w-5" />
+          </div>
+          <h2 className="text-2xl font-semibold md:text-3xl">Experience</h2>
+        </div>
 
-        <div className="grid gap-6">
-          {jobs.map((j, i) => (
-            <motion.div
-              key={j.company + i}
-              variants={item}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-100px' }}
-              className="rounded-xl border border-white/10 bg-white/5 p-5 md:p-6"
+        <div className="grid gap-6 md:grid-cols-2">
+          {experiences.map((exp, i) => (
+            <motion.article
+              key={exp.company}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md"
             >
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-lg md:text-xl font-medium">{j.company}</h3>
-                  <p className="text-sm text-neutral-300 mt-1">{j.role}</p>
+                  <h3 className="text-lg font-medium">{exp.role}</h3>
+                  <p className="text-white/70">{exp.company}</p>
                 </div>
-                <span className="text-xs md:text-sm text-neutral-400 whitespace-nowrap">{j.period}</span>
+                <span className="text-sm text-white/60">{exp.period}</span>
               </div>
-              <p className="text-sm md:text-base text-neutral-300 mt-3 leading-relaxed">{j.details}</p>
-            </motion.div>
+              <ul className="mt-4 list-disc space-y-2 pl-4 text-sm text-white/80">
+                {exp.points.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-r from-purple-500/0 via-purple-500/20 to-fuchsia-500/0 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+              />
+            </motion.article>
           ))}
         </div>
       </div>
