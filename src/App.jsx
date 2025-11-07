@@ -3,6 +3,8 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
+import Experience from './components/Experience';
+import Education from './components/Education';
 import Contact from './components/Contact';
 
 export default function App() {
@@ -32,6 +34,8 @@ export default function App() {
             <a href="#about" className="hover:text-white">About</a>
             <a href="#skills" className="hover:text-white">Skills</a>
             <a href="#projects" className="hover:text-white">Projects</a>
+            <a href="#experience" className="hover:text-white">Experience</a>
+            <a href="#education" className="hover:text-white">Education</a>
             <a href="#contact" className="hover:text-white">Contact</a>
           </nav>
         </div>
@@ -42,6 +46,8 @@ export default function App() {
         <About />
         <Skills />
         <Projects />
+        <Experience />
+        <Education />
         <Contact />
       </main>
     </div>

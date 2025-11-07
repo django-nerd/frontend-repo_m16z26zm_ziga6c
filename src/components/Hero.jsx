@@ -32,6 +32,41 @@ export default function Hero() {
         />
       )}
 
+      {/* Colorful, keunguan animated auras (subtle, layered) */}
+      {!prefersReducedMotion && (
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <motion.div
+            initial={{ opacity: 0.25, scale: 0.95 }}
+            animate={{ opacity: [0.25, 0.45, 0.25], scale: [0.95, 1.03, 0.95] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vmin] h-[70vmin] rounded-full blur-3xl"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.35), rgba(59, 130, 246, 0.2) 45%, rgba(0,0,0,0) 65%)',
+            }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0.2, scale: 1.05 }}
+            animate={{ opacity: [0.2, 0.35, 0.2], scale: [1.05, 0.98, 1.05] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 w-[90vmin] h-[90vmin] rounded-full blur-[72px]"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.18), rgba(251, 146, 60, 0.14) 40%, rgba(0,0,0,0) 65%)',
+            }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0.18, rotate: 0 }}
+            animate={{ opacity: [0.18, 0.3, 0.18], rotate: [0, 8, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vmin] h-[65vmin] rounded-full border border-fuchsia-400/20"
+            style={{ boxShadow: '0 0 120px 40px rgba(168,85,247,0.08) inset' }}
+          />
+        </div>
+      )}
+
       {/* Subtle overlays with no interaction blocking */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black" aria-hidden="true" />
       <div
